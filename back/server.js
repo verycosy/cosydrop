@@ -1,15 +1,19 @@
-const http = require("http");
-const express = require("express");
-const socketIO = require("socket.io");
-const socketHandler = require("./socket");
+const http = require("http"),
+  express = require("express"),
+  helmet = require("helmet"),
+  socketIO = require("socket.io"),
+  socketHandler = require("./socket");
 
 const PORT = 5020;
+
 const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
-const server = http
-  .createServer(app)
-  .listen(PORT, () => console.log(`✅ Server running on localhost:${PORT}`));
+app.use(helmet());
 
-const io = socketIO.listen(server);
+server.listen(PORT, () =>
+  console.log(`✅ Server running on localhost:${PORT}`)
+);
 
-io.on("connection", socketHandler);
+io.on("connection", socket => socketHandler(socket, io));

@@ -1,20 +1,13 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useState } from "../context";
+import React, { useState } from "react";
 import Setting from "../Components/Room/Setting";
 import SharingRoom from "../Components/Room/SharingRoom";
 
 export default () => {
-  const { username, namespace } = useState();
-  const { namespace: paramNamespace } = useParams();
+  const [username, setUsername] = useState(localStorage.getItem("username"));
 
   return username ? (
-    namespace ? (
-      <SharingRoom />
-    ) : (
-      <Setting type={"namespace"} />
-    )
+    <SharingRoom username={username} />
   ) : (
-    <Setting type={"username"} />
+    <Setting fn={setUsername} />
   );
 };
